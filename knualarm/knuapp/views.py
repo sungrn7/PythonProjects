@@ -22,16 +22,19 @@ import datetime
 import re
 
 #메세지
-welcome = {'type': 'buttons', 'buttons': ['학식보기', "KNUCOIN", "!도움!"]}
-main = {'message': {'text': '메인으로 돌아갑니다.\n'},  'keyboard': {'type': 'buttons', 'buttons': ['학식보기', 'KNUCOIN', "!도움!"]} }
+welcome = {'type': 'buttons', 'buttons': ['학식보기',"공지사항", "내정보", "!도움!"]}
+main = {'message': {'text': '메인으로 돌아갑니다.\n'},  'keyboard': {'type': 'buttons', 'buttons': ['학식보기', '공지사항', "내정보", "!도움!"]} }
 sorry = {'message': {'text': '죄송합니다.\n이해하지 못했습니다.\n다시 시도해주세요.'}, 'keyboard': {'type': 'buttons', 'buttons':['메인', "!도움!"]}}
 helps = {'message': {'text':'안녕하세요.\n컴퓨터공학부 소프트웨어전공 17학번 문승현입니다.\n이것은 공주대학교 유틸봇입니다.\n업데이트 공지는 홈에서 이루어집니다.\n많은 친구추가와 관심부탁드립니다.\n개발자에게 여자소개시켜주세요.\n버그&아이디어 제보: mhubeen@gmail.com\n감사합니다.'}, "keyboard": { "type": "buttons", "buttons": ["메인","뒤로가기"]}}
 haksik = {'message': {'text': '어디 캠퍼스의 학식을 보고 싶으신가요?\n'},  'keyboard': {'type': 'buttons', 'buttons': ['천안캠퍼스', "신관캠퍼스", "예산캠퍼스","메인", "뒤로가기", "!도움!"]} }
 call_admin = {'message': {'text': '[ERROR]\n\n알 수 없는 에러가 나타났다!\n\n사용자는 개발자에게 문의를 해주세요!'}, 'keyboard': {'type': 'buttons', 'buttons':['메인', "!도움!"]}}
 notfriend = {'message': {'text': '[안내]\n\n공주대학교 봇 서비스를 이용하시려면 먼저 친구추가를 해주세요!!!\n* 만약 친구추가가 되어있어도 안내가 뜬다면 차단하였다가 다시 추가해주세요.'},'keyboard': {'type': 'buttons', 'buttons':['메인', "!도움!"]}}
 knucoin_main = {'message': {'text': 'KNUCOIN 서비스에 오신것을 환영합니다.\nKNUCOIN은 하루에 0.1개씩 받을 수 있습니다.\n코인으로 이용할 수  있는 서비스는 이후에 점차 늘려갈 예정입니다.'},'keyboard': {'type': 'buttons', 'buttons':['내코인', "코인 받기", '뒤로가기']}}
+mypage = {'message': {'text': '[내정보] \n\n현재는 KNUCOIN 조회만 가능합니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['KNUCOIN', '뒤로가기']}}
+notics = {'message': {'text': '공주대학교 공지사항을 쉽게 볼 수 있는 서비스입니다.\n\n최근에 올라온 공지사항을 보여드리며 링크를 직접 들어가셔서 보시면 됩니다.\n많은 이용 바랍니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['학생소식', '뒤로가기']}}
+notics_school = {'message': {'text': ''},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
 
-
+#학식 페이지
 cheonan = {
     'message': {'text': '[공주대학교 천안캠퍼스]\n\n* 평일\n- 조식: 07:40 ~ 09:00\n- 중식: 11:30 ~ 13:30\n- 석식: 17:40 ~ 19:00\n\n* 주말 및 공휴일\n- 조식: 08:00 ~ 09:00\n- 중식: 12:00 ~ 13:00\n- 석식: 18:00 ~ 19:00\n\n어디 식당의 식단을 보시겠습니까?'},
     'keyboard': {'type': 'buttons', 'buttons': ['생활관 식당', "학생 식당", "직원 식당","메인", "뒤로가기"]}
@@ -121,16 +124,17 @@ def give_point(_ids):
         return gives
 
 def get_Announ():
-        url = {}
-        lnk1 = urllib.request.Request("http://www.kongju.ac.kr/lounge/board.jsp?board=student_news&page=0")
-        frame = urllib.request.urlopen(lnk1)
-        sc = frame.read()
-        frame.close()
-        cd = BeautifulSoup(sc, "html.parser")
-        tb = cd.find("table", class_="content_main_table02").find_all("a", href=True)
-        for i, cnt in zip(tb, range(len(tb))):
-             url[cnt] = [i['title'], "http://www.kongju.ac.kr/lounge/"+i['href']]
-        return json.dump(url)
+	url = {}
+	lnk1 = urllib.request.Request("http://www.kongju.ac.kr/lounge/board.jsp?board=student_news&page=0")
+	frame = urllib.request.urlopen(lnk1)
+	sc = frame.read()
+	frame.close()
+	cd = BeautifulSoup(sc, "html.parser")
+	tb = cd.find("table", class_="content_main_table02").find_all("a", href=True)
+	for i, cnt in zip(tb, range(len(tb))):
+		url[cnt] = [i['title'], "http://www.kongju.ac.kr/lounge/"+i['href']]
+		
+	return json.dumps(url)
 
 def get_staff_si():
     try:
@@ -191,7 +195,6 @@ def get_dreem():
     now = time.localtime()
     bobname = ["\n[조식]\n", "\n[중식]\n", "\n[석식]\n"]
     clear = []
-    print("YEEEE")
     http = urllib3.PoolManager(
         cert_reqs='CERT_REQUIRED',
         ca_certs=certifi.where()
@@ -227,156 +230,214 @@ def friend_add(request):
 
 
 def keyboard(request):
-    now = time.strftime("%y.%m.%d", time.localtime())
+	now = time.strftime("%y.%m.%d", time.localtime())
     #dreem_ck = db_check(dreem ,now)
-    staff_ch_ck = db_check(staff_ch, now)
-    staff_ye_ck = db_check(staff_ye, now)
-    staff_si_ck = db_check(staff_si, now)
-    Announ_ck = db_check(Announs, now)
+	staff_ch_ck = db_check(staff_ch, now)
+	staff_ye_ck = db_check(staff_ye, now)
+	staff_si_ck = db_check(staff_si, now)
+	Announ_ck = db_check(Announs, now)
     #if (dreem_ck == "X"):
     #    dreem_con = get_dreem()
         #db_insert(dreem,dreem_con)
-    if (staff_ye_ck == "X"):
-        staff_ye_con  = get_staff_ye()
-        db_insert(staff_ye, staff_ye_con)
-    if (staff_ch_ck == "X"):
-        staff_ch_con = get_staff_ch()
-        db_insert(staff_ch, staff_ch_con)
-    if (staff_si_ck == "X"):
-        staff_si_con = get_staff_si()
-        db_insert(staff_si, staff_si_con)
-    return JsonResponse(welcome)
+	if (Announ_ck == "X"):
+		Announ_con = get_Announ()
+		db_insert(Announs, Announ_con)
+	if (staff_ye_ck == "X"):
+		staff_ye_con  = get_staff_ye()
+		db_insert(staff_ye, staff_ye_con)
+	if (staff_ch_ck == "X"):
+		staff_ch_con = get_staff_ch()
+		db_insert(staff_ch, staff_ch_con)
+	if (staff_si_ck == "X"):
+		staff_si_con = get_staff_si()
+		db_insert(staff_si, staff_si_con)
+	return JsonResponse(welcome)
+
+def announToTitle(v):
+	ret = []
+	js = json.loads(v)
+	for i in js:
+		ret.append(js[i][0])
+	return ret
+
+def announToURL(strs):
+	now = strftime("%y.%m.%d", time.localtime())
+	dic = db_get(Announs,now)
+	js = json.loads(dic)
+	for i in js:
+		if(js[i][0] == strs):
+			return js[i][1]
+	return "X"
 
 @csrf_exempt
 def message(request):   
-    knucoin_de = {'message': {'text': '[KNUCOIN]\n\n현재 소지하고 있는 갯수는 아래와 같습니다.\n\nKNUCOIN : '},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
-    knucoin_gi = {'message': {'text': '[KNUCOIN]\n\n코인은 하루에 0.1knc를 지급합니다.\n\n'},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
-    bob = {'message': {'text': ""}, 'keyboard': {'type': 'buttons', 'buttons': ["메인", "뒤로가기"]}}
-    now = strftime("%y.%m.%d", time.localtime())
-    message = ((request.body).decode('utf-8'))
-    ret_json = json.loads(message)
-    strs = ret_json['content']
-    ids = ret_json['user_key']
-
-    if (strs == "!도움!"):
-        db_update_idx(ids, 1)
-        return JsonResponse(helps)
-    elif (strs == "뒤로가기"):
-        if(db_get_idx(ids) == 1):
-            db_update_idx(ids, 0)
-            return JsonResponse(main)
-        if(db_get_idx(ids) == 2):
-            db_update_idx(ids, 0)
-            return JsonResponse(main)
-        if(db_get_idx(ids) == 3):
-            db_update_idx(ids, 0)
-            return JsonResponse(main)
-        if(db_get_idx(ids) == 4):
-            db_update_idx(ids, 3)
-            return JsonResponse(cheonan)
-        if(db_get_idx(ids) == 5):
-            db_update_idx(ids, 3)
-            return JsonResponse(cheonan)
-        if(db_get_idx(ids) == 6):
-            db_update_idx(ids, 3)
-            return JsonResponse(cheonan)
-        if(db_get_idx(ids) == 7):
-            db_update_idx(ids, 0)
-            return JsonResponse(main)
-        if(db_get_idx(ids) == 8):
-            db_update_idx(ids, 7)
-            return JsonResponse(singwan)
-        if(db_get_idx(ids) == 9):
-            db_update_idx(ids, 7)
-            return JsonResponse(singwan)
-        if(db_get_idx(ids) == 10):
-            db_update_idx(ids, 7)
-            return JsonResponse(singwan)
-        if(db_get_idx(ids) == 11):
-            db_update_idx(ids, 10)
-            return JsonResponse(singwan_dormi)
-        if(db_get_idx(ids) == 12):
-            db_update_idx(ids, 10)
-            return JsonResponse(singwan_dormi)
-        if(db_get_idx(ids) == 13):
-            db_update_idx(ids, 0)
-            return JsonResponse(main)
-        if(db_get_idx(ids) == 14):
-            db_update_idx(ids, 13)
-            return JsonResponse(yesan)
-        if(db_get_idx(ids) == 15):
-            db_update_idx(ids, 13)
-            return JsonResponse(yesan)
-        if(db_get_idx(ids) == 16):
-            db_update_idx(ids, 0)
-            return JsonResponse(main)
-
-    elif(strs == "메인"):
-        if(db_get_idx(ids) == 16):
-            return JsonResponse(knucoin_main)
-        db_update_idx(ids, 0)
-        return JsonResponse(main)
-    elif(strs == "KNUCOIN"):
-        if(db_not_friend(ids) != 'X'):
-            db_update_idx(ids, 16)
-            return JsonResponse(knucoin_main)
-        else:
-            return JsonResponse(notfriend)
-    elif(strs == "학식보기"):
-        if(db_not_friend(ids) != 'X'):
-            db_update_idx(ids, 2)
-            return JsonResponse(haksik)
-        else:
-            return JsonResponse(notfriend)
-    elif(strs == "천안캠퍼스"):
-        db_update_idx(ids, 3)
-        return JsonResponse(cheonan)
-    elif(strs == "신관캠퍼스"):
-        db_update_idx(ids, 7)
-        return JsonResponse(singwan)
-    elif(strs == "예산캠퍼스"):
-        db_update_idx(ids, 13)
-        return JsonResponse(yesan)
-    elif(strs == "생활관 식당"):
-        if(db_get_idx(ids) == 7):
-            db_update_idx(ids, 10)
-            return JsonResponse(singwan_dormi)
-        return JsonResponse(alert)
-    elif(strs == "직원 식당"):
-        if(db_get_idx(ids) == 3):
-            db_update_idx(ids, 5)
-            bob['message']['text'] = db_get(staff_ch, now)
-            return JsonResponse(bob)
-        if(db_get_idx(ids) == 7):
-            db_update_idx(ids, 9)
-            bob['message']['text'] = db_get(staff_si, now)
-            return JsonResponse(bob)
-        if(db_get_idx(ids) == 13):
-            db_update_idx(ids, 15)
-            bob['message']['text'] = db_get(staff_ye, now)
-            return JsonResponse(bob)
-    elif(strs == "학생 식당"):
-        return JsonResponse(alert)
-    elif(strs == "은행사/비전"):
-        db_update_idx(ids, 11)
-        return JsonResponse(alert)
-    elif(strs == "드림하우스"):
-        db_update_idx(ids, 12)
+	announ_view = {'message': {'text': '[학생소식]\n\n학생소식을 선택하셨습니다.\n학생소식에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons', 'buttons':[]}}
+	knucoin_de = {'message': {'text': '[KNUCOIN]\n\n현재 소지하고 있는 갯수는 아래와 같습니다.\n\nKNUCOIN : '},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
+	knucoin_gi = {'message': {'text': '[KNUCOIN]\n\n코인은 하루에 0.1knc를 지급합니다.\n\n'},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
+	bob = {'message': {'text': ""}, 'keyboard': {'type': 'buttons', 'buttons': ["메인", "뒤로가기"]}}
+	now = strftime("%y.%m.%d", time.localtime())
+	message = ((request.body).decode('utf-8'))
+	ret_json = json.loads(message)
+	strs = ret_json['content']	
+	ids = ret_json['user_key']
+	
+	if (strs == "!도움!"):
+		db_update_idx(ids, 1)	
+		return JsonResponse(helps)
+	elif (strs == "뒤로가기"):
+		if(db_get_idx(ids) == 1):
+			db_update_idx(ids, 0)
+			return JsonResponse(main)
+		if(db_get_idx(ids) == 2):
+			db_update_idx(ids, 0)
+			return JsonResponse(main)
+		if(db_get_idx(ids) == 3):
+			db_update_idx(ids, 0)
+			return JsonResponse(main)
+		if(db_get_idx(ids) == 4):
+			db_update_idx(ids, 3)
+			return JsonResponse(cheonan)
+		if(db_get_idx(ids) == 5):
+			db_update_idx(ids, 3)
+			return JsonResponse(cheonan)		
+		if(db_get_idx(ids) == 6):
+			db_update_idx(ids, 3)
+			return JsonResponse(cheonan)
+		if(db_get_idx(ids) == 7):	
+			db_update_idx(ids, 0)
+			return JsonResponse(main)		
+		if(db_get_idx(ids) == 8):
+			db_update_idx(ids, 7)
+			return JsonResponse(singwan)
+		if(db_get_idx(ids) == 9):
+			db_update_idx(ids, 7)		
+			return JsonResponse(singwan)
+		if(db_get_idx(ids) == 10):
+			db_update_idx(ids, 7)
+			return JsonResponse(singwan)
+		if(db_get_idx(ids) == 11):		
+			db_update_idx(ids, 10)
+			return JsonResponse(singwan_dormi)
+		if(db_get_idx(ids) == 12):
+			db_update_idx(ids, 10)
+			return JsonResponse(singwan_dormi)
+		if(db_get_idx(ids) == 13):
+			db_update_idx(ids, 0)
+			return JsonResponse(main)
+		if(db_get_idx(ids) == 14):
+			db_update_idx(ids, 13)
+			return JsonResponse(yesan)
+		if(db_get_idx(ids) == 15):
+			db_update_idx(ids, 13)
+			return JsonResponse(yesan)
+		if(db_get_idx(ids) == 16):
+			db_update_idx(ids, 0)
+			return JsonResponse(main)
+		if(db_get_idx(ids) == 17):
+			db_update_idx(ids, 16)
+			return JsonResponse(mypage)
+		if(db_get_idx(ids) == 18):
+			db_update_idx(ids, 0)
+			return JsonResponse(main)
+		if(db_get_idx(ids) == 19):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+	elif(strs == "메인"):
+		if(db_get_idx(ids) == 16):
+			return JsonResponse(knucoin_main)
+		db_update_idx(ids, 0)
+		return JsonResponse(main)	
+	elif(strs == "내정보"):
+		if(db_not_friend(ids) != 'X'):
+			db_update_idx(ids, 16)
+			return JsonResponse(mypage)
+		else:		
+			return JsonResponse(notfriend)
+	elif(strs == "학식보기"):
+		if(db_not_friend(ids) != 'X'):
+			db_update_idx(ids, 2)
+			return JsonResponse(haksik)
+		else:
+			return JsonResponse(notfriend)
+	elif(strs == "천안캠퍼스"):
+		db_update_idx(ids, 3)
+		return JsonResponse(cheonan)
+	elif(strs == "신관캠퍼스"):
+		db_update_idx(ids, 7)
+		return JsonResponse(singwan)
+	elif(strs == "예산캠퍼스"):
+		db_update_idx(ids, 13)
+		return JsonResponse(yesan)
+	elif(strs == "생활관 식당"):
+		if(db_get_idx(ids) == 7):	
+			db_update_idx(ids, 10)
+			return JsonResponse(singwan_dormi)
+		return JsonResponse(alert)
+	elif(strs == "직원 식당"):
+		if(db_get_idx(ids) == 3):
+			db_update_idx(ids, 5)
+			bob['message']['text'] = db_get(staff_ch, now)	
+			return JsonResponse(bob)	
+		if(db_get_idx(ids) == 7):
+			db_update_idx(ids, 9)
+			bob['message']['text'] = db_get(staff_si, now)
+			return JsonResponse(bob)
+		if(db_get_idx(ids) == 13):
+			db_update_idx(ids, 15)
+			bob['message']['text'] = db_get(staff_ye, now)
+			return JsonResponse(bob)
+	elif(strs == "학생 식당"):
+		return JsonResponse(alert)
+	elif(strs == "은행사/비전"):
+		db_update_idx(ids, 11)
+		return JsonResponse(alert)
+	elif(strs == "드림하우스"):
+		db_update_idx(ids, 12)
         #bob['message']['text'] = db_get(dreem, now)
-        return JsonResponse(alert)
-    elif(strs == "내코인"):
-        val = get_point(ids)
-        print(val)
-        tmps = knucoin_de['message']['text'] + str(val) + "knc\n"
-        knucoin_de['message']['text'] = tmps
-        return JsonResponse(knucoin_de)
-    elif(strs == "코인 받기"):
-        g_val = give_point(ids)
-        if(g_val == "X"):
-            tmps = knucoin_gi['message']['text'] + "오늘은 받으실 수 없습니다!\n내일 받으시길 바랍니다!"
-        else:
-            tmps = knucoin_gi['message']['text'] + str(g_val) + "knc를 지급받으셨습니다!!\n"
-        knucoin_gi['message']['text'] = tmps
-        return JsonResponse(knucoin_gi)
+		return JsonResponse(alert)
+	elif(strs == "KNUCOIN"):
+		if(db_get_idx(ids) == 16):
+			db_update_idx(ids, 17)
+			return JsonResponse(knucoin_main)
+		return JsonResponse(call_admin)
+	elif(strs == "내코인"):
+		if(db_get_idx(ids) == 17):
+			val = get_point(ids)
+			tmps = knucoin_de['message']['text'] + str(val) + "knc\n"
+			knucoin_de['message']['text'] = tmps
+			return JsonResponse(knucoin_de)
+		return JsonResponse(call_admin)	
+	elif(strs == "코인 받기"):
+		if(db_get_idx(ids) == 17):
+			g_val = give_point(ids)
+			if(g_val == "X"):
+				tmps = knucoin_gi['message']['text'] + "오늘은 받으실 수 없습니다!\n내일 받으시길 바랍니다!"
+			else:
+				tmps = knucoin_gi['message']['text'] + str(g_val) + "knc를 지급받으셨습니다!!\n"
+			knucoin_gi['message']['text'] = tmps
+			return JsonResponse(knucoin_gi)
+		return JsonResponse(alert)
 
+	elif(strs == "공지사항"):
+		db_update_idx(ids, 18)
+		return JsonResponse(notics)
 
+	elif(strs == "학생소식"):
+		if(db_get_idx(ids) == 18):
+			db_update_idx(ids, 19)
+			dic = db_get(Announs,now)
+			title = announToTitle(dic)
+			announ_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_view)
+		return JsonResponse(call_admin)
+	elif(db_get_idx(ids) == 19):
+		g_url = announToURL(strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_school['message']['text'] = tmp
+			return JsonResponse(notics_school)
+
+	else:
+		return JsonResponse(sorry)
