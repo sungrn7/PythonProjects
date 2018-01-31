@@ -1,4 +1,4 @@
-"""knuapp URL Configuration
+"""knu URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -15,13 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from knu import views
-
+from knuapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-	path('', views.DisplayMyPage),
-	path('keyboard/', views.keyboard),
-	path('message', views.message),
-        path('friend', views.friend_add),
+    path('keyboard/', views.keyboard),
+    path('message', views.message),
+    path('friend', views.friend_add),
 ]
