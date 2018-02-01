@@ -44,6 +44,38 @@ class Announ_art(models.Model):
     day = models.CharField(max_length=128)
     content = models.TextField(blank=True, null=True)
 
+class Announ_control(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+
+class Announ_cse(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+
+
+class Announ_mech(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+class Announ_civil(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+class Announ_archi(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+class Announ_archeng(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+class Announ_ame(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+class Announ_ie(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+class Announ_optical(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+
+# 학식
 class dormi_choen(models.Model):
     day = models.CharField(max_length=128)
     content = models.TextField(blank=True, null=True)
