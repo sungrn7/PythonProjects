@@ -15,6 +15,15 @@ from knuapp.models import Announ_insa
 from knuapp.models import Announ_indu
 from knuapp.models import Announ_cnh
 from knuapp.models import Announ_art
+from knuapp.models import Announ_control
+from knuapp.models import Announ_cse
+from knuapp.models import Announ_mech
+from knuapp.models import Announ_civil
+from knuapp.models import Announ_archi
+from knuapp.models import Announ_archeng
+from knuapp.models import Announ_ame
+from knuapp.models import Announ_ie
+from knuapp.models import Announ_optical
 
 
 import json 
@@ -41,7 +50,7 @@ knucoin_main = {'message': {'text': 'KNUCOIN 서비스에 오신것을 환영합
 mypage = {'message': {'text': '[내정보] \n\n현재는 KNUCOIN 조회만 가능합니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['KNUCOIN', '뒤로가기']}}
 notics = {'message': {'text': '공주대학교 공지사항을 쉽게 볼 수 있는 서비스입니다.\n\n최근에 올라온 공지사항을 보여드리며 링크를 직접 들어가셔서 보시면 됩니다.\n많은 이용 바랍니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['학생소식', '공과대학','사범대학', '인문사회과학대학', '산업과학대학', '간호보건대학', '예술대학',  '뒤로가기']}}
 notics_value = {'message': {'text': ''},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
-
+notics_brain = {'message': {'text': '[공과대학]\n\n공과대학의 공지사항과 공과대학에 소속되있는 학부 및 학과의 공지사항을 조회하실 수 있습니다.\n공지사항을 보시고 싶은 곳을 선택해주세요.\n'},'keyboard': {'type': 'buttons', 'buttons':['공과대학', '컴퓨터공학부', '제어계측공학전공', '기계자동차공학부', '건설환경공학부', '건축학부', '건축공학부', '신소재공학부', '산업시스템공학과', '광공학과', '뒤로가기']}}
 #학식 페이지
 cheonan = {
     'message': {'text': '[공주대학교 천안캠퍼스]\n\n* 평일\n- 조식: 07:40 ~ 09:00\n- 중식: 11:30 ~ 13:30\n- 석식: 17:40 ~ 19:00\n\n* 주말 및 공휴일\n- 조식: 08:00 ~ 09:00\n- 중식: 12:00 ~ 13:00\n- 석식: 18:00 ~ 19:00\n\n어디 식당의 식단을 보시겠습니까?'},
@@ -78,7 +87,15 @@ Announs_insa = Announ_insa
 Announs_indu = Announ_indu
 Announs_cnh = Announ_cnh
 Announs_art = Announ_art
-
+Announs_control = Announ_control
+Announs_cse = Announ_cse
+Announs_mech = Announ_mech
+Announs_civil = Announ_civil
+Announs_archi = Announ_archi
+Announs_archeng = Announ_archeng
+Announs_ame = Announ_ame
+Announs_ie = Announ_ie
+Announs_optical = Announ_optical
 
 
 def db_get(self, days):
@@ -555,6 +572,7 @@ def message(request):
 	ret_json = json.loads(message)
 	strs = ret_json['content']	
 	ids = ret_json['user_key']
+	types = ret_json['type']
 	
 	if (strs == "!도움!"):
 		db_update_idx(ids, 1)	
