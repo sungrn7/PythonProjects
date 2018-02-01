@@ -362,6 +362,18 @@ def get_ie_Announ():
 
     return json.dumps(url)
 
+def get_optical_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET','http://optical.kongju.ac.kr/sub5_4.php')
+    sc = r.data
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", class_="ezsboard_td").find_all("a", class_="ezsboard", href=True)
+    for cnt in  range(1, len(tb), 3):
+        url[cnt] = [tb[cnt].text.strip(), "http://optical.kongju.ac.kr" + tb[cnt]['href']]
+
+    return json.dumps(url)
+
 # 학식
 def get_staff_si():
     try:
