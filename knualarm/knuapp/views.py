@@ -7,7 +7,15 @@ from knuapp.models import staff_singwan
 from knuapp.models import staff_yesan
 from knuapp.models import staff_choen
 from knuapp.models import Account
-from knuapp.models import Announ
+from knuapp.models import Announ_kongju
+from knuapp.models import Announ_brain
+from knuapp.models import Announ_sabum
+from knuapp.models import Announ_insa
+#from knuapp.models import Announ_natural
+from knuapp.models import Announ_indu
+from knuapp.models import Announ_cnh
+from knuapp.models import Announ_art
+
 
 import json 
 import certifi
@@ -31,8 +39,8 @@ call_admin = {'message': {'text': '[ERROR]\n\n알 수 없는 에러가 나타났
 notfriend = {'message': {'text': '[안내]\n\n공주대학교 봇 서비스를 이용하시려면 먼저 친구추가를 해주세요!!!\n* 만약 친구추가가 되어있어도 안내가 뜬다면 차단하였다가 다시 추가해주세요.'},'keyboard': {'type': 'buttons', 'buttons':['메인', "!도움!"]}}
 knucoin_main = {'message': {'text': 'KNUCOIN 서비스에 오신것을 환영합니다.\nKNUCOIN은 하루에 0.1개씩 받을 수 있습니다.\n코인으로 이용할 수  있는 서비스는 이후에 점차 늘려갈 예정입니다.'},'keyboard': {'type': 'buttons', 'buttons':['내코인', "코인 받기", '뒤로가기']}}
 mypage = {'message': {'text': '[내정보] \n\n현재는 KNUCOIN 조회만 가능합니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['KNUCOIN', '뒤로가기']}}
-notics = {'message': {'text': '공주대학교 공지사항을 쉽게 볼 수 있는 서비스입니다.\n\n최근에 올라온 공지사항을 보여드리며 링크를 직접 들어가셔서 보시면 됩니다.\n많은 이용 바랍니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['학생소식', '뒤로가기']}}
-notics_school = {'message': {'text': ''},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
+notics = {'message': {'text': '공주대학교 공지사항을 쉽게 볼 수 있는 서비스입니다.\n\n최근에 올라온 공지사항을 보여드리며 링크를 직접 들어가셔서 보시면 됩니다.\n많은 이용 바랍니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['학생소식', '공과대학','사범대학', '인문사회과학대학', '산업과학대학', '간호보건대학', '예술대학',  '뒤로가기']}}
+notics_value = {'message': {'text': ''},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
 
 #학식 페이지
 cheonan = {
@@ -56,12 +64,21 @@ alert = {'message': {'text': "현재 구현이 되지 않은 상태입니다. �
 
 week = ['월', '화', '수', '목', '금', '토', '일']
 
+# DB선언
 dreem = dreem_singwan
 staff_ch = staff_choen
 staff_ye = staff_yesan
 staff_si = staff_singwan
 Account = Account
-Announs = Announ
+Announs_kongju = Announ_kongju
+Announs_brain = Announ_brain
+Announs_sabum = Announ_sabum
+Announs_insa = Announ_insa
+#Announs_natural = Announ_natural
+Announs_indu = Announ_indu
+Announs_cnh = Announ_cnh
+Announs_art = Announ_art
+
 
 
 def db_get(self, days):
@@ -87,8 +104,10 @@ def db_get_idx(_ids):
     return Account.objects.get(ids=_ids).idx
 
 def db_update_idx(_ids, _idx):
-    Account.objects.filter(ids=_ids).update(idx=_idx)
-
+	try:
+		Account.objects.filter(ids=_ids).update(idx=_idx)
+	except:
+		return "X"
 def db_check(self, days):
     try:
         result = self.objects.filter(day=days)[0]
@@ -97,8 +116,11 @@ def db_check(self, days):
         return "X"
 
 def db_insert(self,contents):
-    string = strftime("%y.%m.%d", time.localtime())
-    self(day=string, content=contents).save()
+	try:
+		string = strftime("%y.%m.%d", time.localtime())
+		self(day=string, content=contents).save()
+	except:
+		return "X"
 
 def db_get_Lasted(_ids):
     return Account.objects.get(ids=_ids).lasted
@@ -123,18 +145,113 @@ def give_point(_ids):
     else:
         return gives
 
-def get_Announ():
-	url = {}
-	lnk1 = urllib.request.Request("http://www.kongju.ac.kr/lounge/board.jsp?board=student_news&page=0")
-	frame = urllib.request.urlopen(lnk1)
-	sc = frame.read()
-	frame.close()
-	cd = BeautifulSoup(sc, "html.parser")
-	tb = cd.find("table", class_="content_main_table02").find_all("a", href=True)
-	for i, cnt in zip(tb, range(len(tb))):
-		url[cnt] = [i['title'], "http://www.kongju.ac.kr/lounge/"+i['href']]
-		
-	return json.dumps(url)
+def get_kongju_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://www.kongju.ac.kr/lounge/board.jsp?board=student_news&page=0')
+    sc =  r.data.decode('cp949', 'ignore')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", class_="content_main_table02").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i['title'] != ""):
+            url[cnt] = [i['title'], "http://www.kongju.ac.kr/lounge/"+i['href']]
+
+    return json.dumps(url)
+
+def get_brain_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://brain.kongju.ac.kr/brain/cop/bbs/selectBoardList.do?bbsId=BBSMSTR_000000000001')
+    sc =  r.data.decode('utf-8')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("div", class_="courses").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            tmp =  i['onclick'].split("fn_egov_inqire_notice(")[1].split(");")[0].replace("'","").replace(" ", "")
+            tmp = tmp.split(',')
+            url_tmp = "http://brain.kongju.ac.kr/brain/cop/bbs/selectBoardArticle.do?bbsId=" + tmp[1] +"&nttId=" + tmp[0]
+            url[cnt] = [i.text , url_tmp]
+
+    return json.dumps(url)
+
+def get_sabum_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://sabum.kongju.ac.kr/custo/list.asp?bbs_code=7')
+    sc =  r.data.decode('cp949', 'ignore')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", {"id":"bbs_list_tbl"}).find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            tmp = i['onclick'].split("viewGo(")[1].split(",")[0]
+            url_tmp = "http://sabum.kongju.ac.kr/custo/view.asp?idx="+ tmp +"&page=1&bbs_code=7"
+            url[cnt] = [i.text , url_tmp]
+
+    return json.dumps(url)
+
+def get_insa_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'https://insa.kongju.ac.kr/main/board/list.action?q=518da08fa3d7eab65226f7de6f82ae4f1be5aadc235d7f9e817ad3dea247a499')
+    sc =  r.data.decode('utf-8')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", class_="body-list-board").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            url[cnt] = [i.text, "https://insa.kongju.ac.kr" + i['href']]
+    return json.dumps(url)
+
+def get_natural_Announ():
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://natural.kongju.ac.kr/news', headers={'User-Agent':'Mozilla/5.0'})
+    sc = r.data.decode('utf-8')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("tbody").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            url[cnt] = [i.text, i['href']]
+    return url
+
+def get_indu_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://indu.kongju.ac.kr/board.do?paramBean.key=65&paramBean.mainGroupKey=1&boardBean.boardMngKey=1')
+    sc = r.data.decode('utf-8')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find_all("span")
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            tmp = i['onclick'].split(', ')[1].split(')')[0]
+            url_tmp = "http://indu.kongju.ac.kr/board.do?org.apache.struts.taglib.html.TOKEN=17e8cdfe30d15523c996ee4028c725f3&boardBean.boardKey=" + tmp + "&boardBean.boardMngKey=1&paramBean.key=65&paramBean.homepageKey=0&paramBean.mainGroupKey=1&paramBean.page=0&action=view&boardBean.passwd=&paramBean.searchType=subject&paramBean.searchWord="
+            url[cnt] = [i.text, url_tmp]
+    return json.dumps(url)
+
+def get_cnh_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://cnh.kongju.ac.kr/sub03/service_01_list.asp')
+    sc = r.data.decode('cp949', 'ignore')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("div", class_="cont_body").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            url[cnt] = [i.text, "http://cnh.kongju.ac.kr/sub03/" + i['href']]
+    return json.dumps(url)
+
+def get_art_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://art.kongju.ac.kr/sub03/sub01_01.jsp?menuNo=3&subNo=1')
+    sc = r.data.decode('utf-8')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("div", class_="board_list").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            url[cnt] = [ i.text, "http://art.kongju.ac.kr/sub03" +i['href'].replace(".","")]
+
+    return json.dumps(url)
 
 def get_staff_si():
     try:
@@ -200,7 +317,6 @@ def get_dreem():
         ca_certs=certifi.where()
     )
     r = http.request('GET', 'https://dormi.kongju.ac.kr/main/contents/food.php?mid=40&k=2')
-    print(r)
     """
     morning = cd.find('div', attrs={'id': 'breakfast'}).find("div")
     morning = morning.getText().replace("(", "").replace(" ", "").split(",")
@@ -235,13 +351,42 @@ def keyboard(request):
 	staff_ch_ck = db_check(staff_ch, now)
 	staff_ye_ck = db_check(staff_ye, now)
 	staff_si_ck = db_check(staff_si, now)
-	Announ_ck = db_check(Announs, now)
+	Announ_kongju_ck = db_check(Announs_kongju, now)
+	Announ_sabum_ck = db_check(Announs_sabum, now)
+	Announ_insa_ck = db_check(Announs_insa, now)
+	#Announ_natural_ck = db_check(Announs_natural, now)
+	Announ_brain_ck = db_check(Announs_brain,now)
+	Announ_indu_ck = db_check(Announs_indu, now)
+	Announ_cnh_ck = db_check(Announs_cnh, now)
+	Announ_art_ck = db_check(Announs_art, now)
     #if (dreem_ck == "X"):
     #    dreem_con = get_dreem()
+	
         #db_insert(dreem,dreem_con)
-	if (Announ_ck == "X"):
-		Announ_con = get_Announ()
-		db_insert(Announs, Announ_con)
+	if (Announ_kongju_ck == "X"):
+		Announ_kongju_con = get_kongju_Announ()
+		db_insert(Announs_kongju, Announ_kongju_con)
+	if (Announ_sabum_ck == "X"):
+		Announ_sabum_con = get_sabum_Announ()
+		db_insert(Announs_sabum, Announ_sabum_con)
+	if (Announ_insa_ck == "X"):
+		Announ_insa_con = get_insa_Announ()
+		db_insert(Announs_insa, Announ_insa_con)
+	if (Announ_brain_ck == "X"):
+		Announ_brain_con = get_brain_Announ()
+		db_insert(Announs_brain, Announ_brain_con)
+	#if (Announ_natural_ck == "X"):
+	#	Announ_natural_con = get_natural_Announ()
+	#	db_insert(Announs_natural, Announ_natural_con)
+	if (Announ_indu_ck == "X"):
+		Announ_indu_con = get_indu_Announ()
+		db_insert(Announs_indu, Announ_indu_con)
+	if (Announ_cnh_ck == "X"):
+		Announ_cnh_con = get_cnh_Announ()
+		db_insert(Announs_cnh, Announ_cnh_con)
+	if (Announ_art_ck == "X"):
+		Announ_art_con = get_art_Announ()
+		db_insert(Announs_art, Announ_art_con)
 	if (staff_ye_ck == "X"):
 		staff_ye_con  = get_staff_ye()
 		db_insert(staff_ye, staff_ye_con)
@@ -257,21 +402,29 @@ def announToTitle(v):
 	ret = []
 	js = json.loads(v)
 	for i in js:
-		ret.append(js[i][0])
+		ret.append(js[i][0].strip())
 	return ret
 
-def announToURL(strs):
+def announToURL(self, strs):
 	now = strftime("%y.%m.%d", time.localtime())
-	dic = db_get(Announs,now)
+	dic = db_get(self,now)
 	js = json.loads(dic)
 	for i in js:
-		if(js[i][0] == strs):
+		if(js[i][0].strip() == strs):
 			return js[i][1]
 	return "X"
 
 @csrf_exempt
 def message(request):   
-	announ_view = {'message': {'text': '[학생소식]\n\n학생소식을 선택하셨습니다.\n학생소식에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons', 'buttons':[]}}
+	announ_kongju_view = {'message': {'text': '[학생소식]\n\n학생소식을 선택하셨습니다.\n학생소식에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons', 'buttons':[]}}
+	announ_brain_view = {'message': {'text': '[공과대학]\n\n공과대학을 선택하셨습니다.\n공과대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
+	announ_sabum_view = {'message': {'text': '[사범대학]\n\n사범대학을 선택하셨습니다.\n사범대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
+	announ_insa_view = {'message': {'text': '[인문사회과학대학]\n\n인문사회과학대학을 선택하셨습니다.\n인문사회과학대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
+	announ_natural_view = {'message': {'text': '[자연과학대학]\n\n자연과학대학을 선택하셨습니다.\n자연과학대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
+	announ_indu_view = {'message': {'text': '[산업과학대학]\n\n산업과학대학을 선택하셨습니다.\n산업과학대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
+	announ_cnh_view = {'message': {'text': '[간호보건대학]\n\n간호보건대학을 선택하셨습니다.\n간호보건대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
+	announ_art_view = {'message': {'text': '[예술대학]\n\n예술대학을 선택하셨습니다.\n예술대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
+
 	knucoin_de = {'message': {'text': '[KNUCOIN]\n\n현재 소지하고 있는 갯수는 아래와 같습니다.\n\nKNUCOIN : '},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
 	knucoin_gi = {'message': {'text': '[KNUCOIN]\n\n코인은 하루에 0.1knc를 지급합니다.\n\n'},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
 	bob = {'message': {'text': ""}, 'keyboard': {'type': 'buttons', 'buttons': ["메인", "뒤로가기"]}}
@@ -284,6 +437,8 @@ def message(request):
 	if (strs == "!도움!"):
 		db_update_idx(ids, 1)	
 		return JsonResponse(helps)
+
+#뒤로가기
 	elif (strs == "뒤로가기"):
 		if(db_get_idx(ids) == 1):
 			db_update_idx(ids, 0)
@@ -342,6 +497,29 @@ def message(request):
 		if(db_get_idx(ids) == 19):
 			db_update_idx(ids, 18)
 			return JsonResponse(notics)
+		if(db_get_idx(ids) == 20):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 21):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 22):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 23):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 24):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 25):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 26):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+
+
 	elif(strs == "메인"):
 		if(db_get_idx(ids) == 16):
 			return JsonResponse(knucoin_main)
@@ -421,23 +599,137 @@ def message(request):
 	elif(strs == "공지사항"):
 		db_update_idx(ids, 18)
 		return JsonResponse(notics)
-
 	elif(strs == "학생소식"):
 		if(db_get_idx(ids) == 18):
 			db_update_idx(ids, 19)
-			dic = db_get(Announs,now)
+			dic = db_get(Announs_kongju,now)
 			title = announToTitle(dic)
-			announ_view['keyboard']['buttons'] = title
-			return JsonResponse(announ_view)
+			announ_kongju_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_kongju_view)
+		return JsonResponse(call_admin)
+	elif(strs == "공과대학"):
+		if(db_get_idx(ids) == 18):
+			db_update_idx(ids, 20)
+			dic = db_get(Announs_brain , now)
+			title = announToTitle(dic)
+			announ_kongju_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_kongju_view)
+		return JsonResponse(call_admin)
+	elif(strs == "사범대학"):
+		if(db_get_idx(ids) == 18):
+			db_update_idx(ids,21)
+			dic = db_get(Announs_sabum , now)
+			title = announToTitle(dic)
+			announ_sabum_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_sabum_view)
+		return JsonResponse(call_admin)
+	elif(strs == "인문사회과학대학"):
+		if(db_get_idx(ids) == 18):
+			db_update_idx(ids,22)
+			dic = db_get(Announs_insa , now)
+			title = announToTitle(dic)
+			announ_insa_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_insa_view)
+		return JsonResponse(call_admin)
+# '학생소식', '공과대학','사범대학', '인문사회과학대학', '자연과학대학', '산업과학대학', '간호보건대학', '예술>    대학'
+	#elif(strs == "자연과학대학"):
+	#	if(db_get_idx(ids) == 18):
+	#		db_update_idx(ids,23)
+	#		dic = db_get(Announs_natural , now)
+	#		title = announToTitle(dic)
+	#		announ_natural_view['keyboard']['buttons'] = title
+	#		return JsonResponse(announ_natural_view)
+	#	return JsonResponse(call_admin)
+	elif(strs == "산업과학대학"):
+		if(db_get_idx(ids) == 18):
+			db_update_idx(ids,24)
+			dic = db_get(Announs_indu , now)
+			title = announToTitle(dic)
+			announ_indu_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_indu_view)
+		return JsonResponse(call_admin)
+	elif(strs == "간호보건대학"):
+		if(db_get_idx(ids) == 18):
+			db_update_idx(ids, 25)
+			dic = db_get(Announs_cnh , now)
+			title = announToTitle(dic)
+			announ_cnh_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_cnh_view)
+		return JsonResponse(call_admin)
+	elif(strs == "예술대학"):
+		if(db_get_idx(ids) == 18):
+			db_update_idx(ids, 26)
+			dic = db_get(Announs_art , now)
+			title = announToTitle(dic)
+			announ_art_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_art_view)
 		return JsonResponse(call_admin)
 	elif(db_get_idx(ids) == 19):
-		g_url = announToURL(strs)
+		g_url = announToURL(Announs_kongju,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
 		else:
 			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
-			notics_school['message']['text'] = tmp
-			return JsonResponse(notics_school)
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	
+	elif(db_get_idx(ids) == 20):
+		g_url = announToURL(Announs_brain,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 21):
+		g_url = announToURL(Announs_sabum,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 22):
+		g_url = announToURL(Announs_insa,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	#elif(db_get_idx(ids) == 23):
+	#	g_url = announToURL(Announs_natural,strs)
+	#	if(g_url == "X"):
+	#		return JsonResponse(call_admin)
+	#	else:
+	#		tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+	#		notics_value['message']['text'] = tmp
+	#		return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 24):
+		g_url = announToURL(Announs_indu,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
 
+	elif(db_get_idx(ids) == 25):
+		g_url = announToURL(Announs_cnh,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+
+	elif(db_get_idx(ids) == 26):
+		g_url = announToURL(Announs_art,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
 	else:
 		return JsonResponse(sorry)
