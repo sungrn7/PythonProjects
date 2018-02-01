@@ -18,6 +18,15 @@ from knuapp.models import Announ_insa
 from knuapp.models import Announ_indu 
 from knuapp.models import Announ_cnh 
 from knuapp.models import Announ_art 
+from knuapp.models import Announ_control
+from knuapp.models import Announ_cse
+from knuapp.models import Announ_mech
+from knuapp.models import Announ_civil
+from knuapp.models import Announ_archi
+from knuapp.models import Announ_archeng
+from knuapp.models import Announ_ame
+from knuapp.models import Announ_ie
+from knuapp.models import Announ_optical
 
 
 admin.site.register(dormi_choen)
@@ -38,3 +47,12 @@ admin.site.register(Announ_insa)
 admin.site.register(Announ_indu)
 admin.site.register(Announ_cnh)
 admin.site.register(Announ_art)
+admin.site.register(Announ_control)
+admin.site.register(Announ_cse)
+admin.site.register(Announ_mech)
+admin.site.register(Announ_civil)
+admin.site.register(Announ_archi)
+admin.site.register(Announ_archeng)
+admin.site.register(Announ_ame)
+admin.site.register(Announ_ie)
+admin.site.register(Announ_optical)
