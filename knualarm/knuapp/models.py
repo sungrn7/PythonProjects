@@ -12,7 +12,35 @@ class Account(models.Model):
     td_get = models.BooleanField(default=False)
     idx = models.IntegerField(default=0)
 
-class Announ(models.Model):
+class Announ_kongju(models.Model):
+    day = models.CharField(max_length=128)
+    content = models.TextField(blank=True, null=True)
+
+class Announ_brain(models.Model):
+    day = models.CharField(max_length=128)
+    content = models.TextField(blank=True, null=True)
+
+class Announ_sabum(models.Model):
+    day = models.CharField(max_length=128)
+    content = models.TextField(blank=True, null=True)
+
+class Announ_insa(models.Model):
+    day = models.CharField(max_length=128)
+    content = models.TextField(blank=True, null=True)
+
+#class Announ_natural(models.Model):
+#    day = models.CharField(max_length=128)
+#    content = models.TextField(blank=True, null=True)
+
+class Announ_indu(models.Model):
+    day = models.CharField(max_length=128)
+    content = models.TextField(blank=True, null=True)
+
+class Announ_cnh(models.Model):
+    day = models.CharField(max_length=128)
+    content = models.TextField(blank=True, null=True)
+
+class Announ_art(models.Model):
     day = models.CharField(max_length=128)
     content = models.TextField(blank=True, null=True)
 
