@@ -253,6 +253,116 @@ def get_art_Announ():
 
     return json.dumps(url)
 
+def get_control_Announ(): # 제어계측공학전공
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://control.kongju.ac.kr/Service/board/BoardList.aspx?categ=g1')
+    sc = r.data.decode('utf-8')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find_all("tr")
+    for i, cnt in zip(tb, range(len(tb))):
+        tmp = i.find("a", href=True)
+        if(tmp != None):
+            if(tmp.text != ""):
+                url[cnt] = [tmp.text.strip(), "http://control.kongju.ac.kr/Service/board/BoardItem.aspx?categ=g1&page=1&bidx=" + tmp['onclick'].split("goItem('")[1].split("')")[0]]
+    return json.dumps(url)
+
+def get_cse_Announ(): # 컴퓨터공학부
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://cse.kongju.ac.kr/community/notice.asp')
+    sc = r.data.decode('utf-8')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", class_="lmcGeneralList").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            url[cnt] = [i.text.strip(), "http://cse.kongju.ac.kr" + i['href']]
+    return json.dumps(url)
+
+def get_mech_Announ(): #기계자동차공학부
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://mech.kongju.ac.kr/community/community01_notice.asp?lmCode=notice')
+    sc = r.data.decode('utf-8')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", class_="lmcGeneralList").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            url[cnt] = [i.text.strip(), "http://mech.kongju.ac.kr" + i['href']]
+
+    return json.dumps(url)
+
+
+def get_civil_Announ(): #건설환경공학부
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://civil.kongju.ac.kr/community/community01_notice.asp')
+    sc = r.data.decode('utf-8')
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", class_="lmcGeneralList").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            url[cnt] = [i.text.strip(), "http://civil.kongju.ac.kr" + i['href']]
+
+    return json.dumps(url)
+
+def get_archi_Announ(): #건축학부
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://archi.kongju.ac.kr/notice/list_hi.asp')
+    sc = r.data
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("section", {"id":"content"}).find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        tmp_href = i['href']
+        if(tmp_href.find('download') > 0):
+            if(i.text != ""):
+                url[cnt] = [i.text.strip(), "http://archi.kongju.ac.kr/notice/view_hi.asp?idx="+ tmp_href.split("view_send('")[1].split("')")[0] +"&search=&find=&gotopage=1&keyword="]
+    return json.dumps(url)
+
+def get_archeng_Announ(): #건축공학부
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://archeng.kongju.ac.kr/notice/list_hi.asp')
+    sc = r.data
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", class_="b_txt").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        tmp_href = i['href']
+        if(tmp_href.find('download') > 0):
+            if(i.text != ""):
+                url[cnt] = [i.text.strip(), "http://archeng.kongju.ac.kr/notice/view_hi.asp?idx=" + tmp_href.split("view_send('")[1].split("')")[0] + "&search=&find=&gotopage=1&keyword="]
+
+    return json.dumps(url)
+
+def get_ame_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET','http://ame.kongju.ac.kr/community/notice.asp')
+    sc = r.data
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", class_="lmcGeneralList").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        if(i.text != ""):
+            url[cnt] = [i.text.strip(), "http://ame.kongju.ac.kr" + i['href']]
+    return json.dumps(url)
+
+def get_ie_Announ():
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET','http://ie.kongju.ac.kr/index.php?mid=board_lhSN77')
+    sc = r.data
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table").find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        tmp_href = i['href']
+        if(tmp_href.find('document_srl') > 0):
+            if(i.text != ""):
+                url[cnt] = [i.text.strip(), "http://ie.kongju.ac.kr/" + tmp_href]
+
+    return json.dumps(url)
+
+# 학식
 def get_staff_si():
     try:
         http = urllib3.PoolManager()
