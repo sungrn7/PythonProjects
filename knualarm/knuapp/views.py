@@ -50,7 +50,7 @@ knucoin_main = {'message': {'text': 'KNUCOIN 서비스에 오신것을 환영합
 mypage = {'message': {'text': '[내정보] \n\n현재는 KNUCOIN 조회만 가능합니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['KNUCOIN', '뒤로가기']}}
 notics = {'message': {'text': '공주대학교 공지사항을 쉽게 볼 수 있는 서비스입니다.\n\n최근에 올라온 공지사항을 보여드리며 링크를 직접 들어가셔서 보시면 됩니다.\n많은 이용 바랍니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['학생소식', '공과대학','사범대학', '인문사회과학대학', '산업과학대학', '간호보건대학', '예술대학',  '뒤로가기']}}
 notics_value = {'message': {'text': ''},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
-notics_brain = {'message': {'text': '[공과대학]\n\n공과대학의 공지사항과 공과대학에 소속되있는 학부 및 학과의 공지사항을 조회하실 수 있습니다.\n공지사항을 보시고 싶은 곳을 선택해주세요.\n'},'keyboard': {'type': 'buttons', 'buttons':['공과대학', '컴퓨터공학부', '제어계측공학전공', '기계자동차공학부', '건설환경공학부', '건축학부', '건축공학부', '신소재공학부', '산업시스템공학과', '광공학과', '뒤로가기']}}
+notics_brain = {'message': {'text': '[공과대학]\n\n공과대학의 공지사항과 공과대학에 소속되있는 학부 및 학과의 공지사항을 조회하실 수 있습니다.\n공지사항을 보시고 싶은 곳을 선택해주세요.\n'},'keyboard': {'type': 'buttons', 'buttons':['공과대학공지', '컴퓨터공학부', '제어계측공학전공', '기계자동차공학부', '건설환경공학부', '건축학부', '건축공학부', '신소재공학부', '산업시스템공학과', '광공학과', '뒤로가기']}}
 #학식 페이지
 cheonan = {
     'message': {'text': '[공주대학교 천안캠퍼스]\n\n* 평일\n- 조식: 07:40 ~ 09:00\n- 중식: 11:30 ~ 13:30\n- 석식: 17:40 ~ 19:00\n\n* 주말 및 공휴일\n- 조식: 08:00 ~ 09:00\n- 중식: 12:00 ~ 13:00\n- 석식: 18:00 ~ 19:00\n\n어디 식당의 식단을 보시겠습니까?'},
@@ -498,6 +498,15 @@ def keyboard(request):
 	Announ_indu_ck = db_check(Announs_indu, now)
 	Announ_cnh_ck = db_check(Announs_cnh, now)
 	Announ_art_ck = db_check(Announs_art, now)
+	Announ_control_ck = db_check(Announs_control, now)
+	Announ_cse_ck = db_check(Announs_cse, now)
+	Announ_mech_ck = db_check(Announs_mech, now)
+	Announ_civil_ck = db_check(Announs_civil, now)
+	Announ_archi_ck = db_check(Announs_archi, now)
+	Announ_archeng_ck = db_check(Announs_archeng, now)
+	Announ_ame_ck = db_check(Announs_ame, now)
+	Announ_ie_ck = db_check(Announs_ie, now)
+	Announ_optical_ck = db_check(Announs_optical, now)
     #if (dreem_ck == "X"):
     #    dreem_con = get_dreem()
 	
@@ -526,6 +535,35 @@ def keyboard(request):
 	if (Announ_art_ck == "X"):
 		Announ_art_con = get_art_Announ()
 		db_insert(Announs_art, Announ_art_con)
+	if (Announ_control_ck == "X"):
+		Announ_control_con = get_control_Announ()
+		db_insert(Announs_control, Announ_control_con)
+	if (Announ_cse_ck == "X"):
+		Announ_cse_con = get_cse_Announ()
+		db_insert(Announs_cse, Announ_cse_con)
+	if (Announ_mech_ck == "X"):
+		Announ_mech_con = get_mech_Announ()
+		db_insert(Announs_mech, Announ_mech_con)
+	if (Announ_civil_ck == "X"):
+		Announ_civil_con = get_civil_Announ()
+		db_insert(Announs_civil, Announ_civil_con)
+	if (Announ_archi_ck == "X"):
+		Announ_archi_con = get_archi_Announ()
+		db_insert(Announs_archi, Announ_archi_con)
+	if (Announ_archeng_ck == "X"):
+		Announ_archeng_con = get_archeng_Announ()
+		db_insert(Announs_archeng, Announ_archeng_con)
+	if (Announ_ame_ck == "X"):
+		Announ_ame_con = get_ame_Announ()
+		db_insert(Announs_ame, Announ_ame_con)
+	if (Announ_ie_ck == "X"):
+		Announ_ie_con = get_ie_Announ()
+		db_insert(Announs_ie, Announ_ie_con)
+	if (Announ_optical_ck == "X"):
+		Announ_optical_con = get_optical_Announ()
+		db_insert(Announs_optical, Announ_optical_con)
+	
+
 	if (staff_ye_ck == "X"):
 		staff_ye_con  = get_staff_ye()
 		db_insert(staff_ye, staff_ye_con)
@@ -563,6 +601,15 @@ def message(request):
 	announ_indu_view = {'message': {'text': '[산업과학대학]\n\n산업과학대학을 선택하셨습니다.\n산업과학대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
 	announ_cnh_view = {'message': {'text': '[간호보건대학]\n\n간호보건대학을 선택하셨습니다.\n간호보건대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
 	announ_art_view = {'message': {'text': '[예술대학]\n\n예술대학을 선택하셨습니다.\n예술대학에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',     'buttons':[]}}
+	announ_control_view = {'message': {'text': '[제어계측공학전공]\n\n을 선택하셨습니다.\n제어계측공학전공에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
+	announ_cse_view = {'message': {'text': '[컴퓨터공학부]\n\n을 선택하셨습니다.\n컴퓨터공학부에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
+	announ_mech_view = {'message': {'text': '[기계자동차공학부]\n\n을 선택하셨습니다.\기계자동차공학부n에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
+	announ_civil_view = {'message': {'text': '[건설환경공학부]\n\n을 선택하셨습니다.\n건설환경공학부에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
+	announ_archi_view = {'message': {'text': '[건축학부]\n\n을 선택하셨습니다.\n건축학부에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
+	announ_archeng_view = {'message': {'text': '[건축공학부]\n\n을 선택하셨습니다.\n건축공학부에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
+	announ_ame_view = {'message': {'text': '[신소재공학부]\n\n을 선택하셨습니다.\n신소재공학부에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
+	announ_ie_view = {'message': {'text': '[산업시스템공학과]\n\n을 선택하셨습니다.\n산업시스템공학과에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
+	announ_optical_view = {'message': {'text': '[광공학과]\n\n을 선택하셨습니다.\n광공학과에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
 
 	knucoin_de = {'message': {'text': '[KNUCOIN]\n\n현재 소지하고 있는 갯수는 아래와 같습니다.\n\nKNUCOIN : '},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
 	knucoin_gi = {'message': {'text': '[KNUCOIN]\n\n코인은 하루에 0.1knc를 지급합니다.\n\n'},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
@@ -641,23 +688,51 @@ def message(request):
 			db_update_idx(ids, 18)
 			return JsonResponse(notics)
 		if(db_get_idx(ids) == 21):
-			db_update_idx(ids, 18)
-			return JsonResponse(notics)
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
 		if(db_get_idx(ids) == 22):
-			db_update_idx(ids, 18)
-			return JsonResponse(notics)
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
 		if(db_get_idx(ids) == 23):
-			db_update_idx(ids, 18)
-			return JsonResponse(notics)
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
 		if(db_get_idx(ids) == 24):
-			db_update_idx(ids, 18)
-			return JsonResponse(notics)
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
 		if(db_get_idx(ids) == 25):
-			db_update_idx(ids, 18)
-			return JsonResponse(notics)
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
 		if(db_get_idx(ids) == 26):
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
+		if(db_get_idx(ids) == 27):
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
+		if(db_get_idx(ids) == 28):
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
+		if(db_get_idx(ids) == 29):
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
+		if(db_get_idx(ids) == 30):
+			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
+		if(db_get_idx(ids) == 31):
 			db_update_idx(ids, 18)
 			return JsonResponse(notics)
+		if(db_get_idx(ids) == 32):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 33):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 34):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 35):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
+
 
 
 	elif(strs == "메인"):
@@ -750,14 +825,76 @@ def message(request):
 	elif(strs == "공과대학"):
 		if(db_get_idx(ids) == 18):
 			db_update_idx(ids, 20)
+			return JsonResponse(notics_brain)
+	elif(db_get_idx(ids) == 20):
+		if(strs == "공과대학공지"):
+			db_update_idx(ids, 21)
 			dic = db_get(Announs_brain , now)
 			title = announToTitle(dic)
-			announ_kongju_view['keyboard']['buttons'] = title
-			return JsonResponse(announ_kongju_view)
+			announ_brain_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_brain_view)
+
+		if(strs == "컴퓨터공학부"):
+			db_update_idx(ids, 22)
+			dic = db_get(Announs_cse , now)
+			title = announToTitle(dic)
+			announ_cse_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_cse_view)
+
+		if(strs == "제어계측공학전공"):
+			db_update_idx(ids, 23)
+			dic = db_get(Announs_control , now)
+			title = announToTitle(dic)
+			announ_control_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_control_view)
+
+		if(strs == "기계자동차공학부"):
+			db_update_idx(ids, 24)
+			dic = db_get(Announs_mech , now)
+			title = announToTitle(dic)
+			announ_mech_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_mech_view)
+		if(strs == "건설환경공학부"):
+			db_update_idx(ids, 25)
+			dic = db_get(Announs_civil , now)
+			title = announToTitle(dic)
+			announ_civil_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_civil_view)
+		if(strs == "건축학부"):
+			db_update_idx(ids, 26)
+			dic = db_get(Announs_archi , now)
+			title = announToTitle(dic)
+			announ_archi_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_archi_view)
+		if(strs == "건축공학부"):
+			db_update_idx(ids, 27)
+			dic = db_get(Announs_archeng , now)
+			title = announToTitle(dic)
+			announ_archeng_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_archeng_view)
+		if(strs == "신소재공학부"):
+			db_update_idx(ids, 28)
+			dic = db_get(Announs_ame , now)
+			title = announToTitle(dic)
+			announ_ame_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_ame_view)
+		if(strs == "산업시스템공학과"):
+			db_update_idx(ids, 29)
+			dic = db_get(Announs_ie , now)
+			title = announToTitle(dic)
+			announ_ie_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_ie_view)
+		if(strs == "광공학과"):
+			db_update_idx(ids, 30)
+			dic = db_get(Announs_optical , now)
+			title = announToTitle(dic)
+			announ_optical_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_optical_view)
 		return JsonResponse(call_admin)
+
 	elif(strs == "사범대학"):
 		if(db_get_idx(ids) == 18):
-			db_update_idx(ids,21)
+			db_update_idx(ids,31)
 			dic = db_get(Announs_sabum , now)
 			title = announToTitle(dic)
 			announ_sabum_view['keyboard']['buttons'] = title
@@ -765,7 +902,7 @@ def message(request):
 		return JsonResponse(call_admin)
 	elif(strs == "인문사회과학대학"):
 		if(db_get_idx(ids) == 18):
-			db_update_idx(ids,22)
+			db_update_idx(ids,32)
 			dic = db_get(Announs_insa , now)
 			title = announToTitle(dic)
 			announ_insa_view['keyboard']['buttons'] = title
@@ -774,7 +911,7 @@ def message(request):
 # '학생소식', '공과대학','사범대학', '인문사회과학대학', '자연과학대학', '산업과학대학', '간호보건대학', '예술>    대학'
 	#elif(strs == "자연과학대학"):
 	#	if(db_get_idx(ids) == 18):
-	#		db_update_idx(ids,23)
+	#		db_update_idx(ids,33)
 	#		dic = db_get(Announs_natural , now)
 	#		title = announToTitle(dic)
 	#		announ_natural_view['keyboard']['buttons'] = title
@@ -782,7 +919,7 @@ def message(request):
 	#	return JsonResponse(call_admin)
 	elif(strs == "산업과학대학"):
 		if(db_get_idx(ids) == 18):
-			db_update_idx(ids,24)
+			db_update_idx(ids,34)
 			dic = db_get(Announs_indu , now)
 			title = announToTitle(dic)
 			announ_indu_view['keyboard']['buttons'] = title
@@ -790,7 +927,7 @@ def message(request):
 		return JsonResponse(call_admin)
 	elif(strs == "간호보건대학"):
 		if(db_get_idx(ids) == 18):
-			db_update_idx(ids, 25)
+			db_update_idx(ids, 35)
 			dic = db_get(Announs_cnh , now)
 			title = announToTitle(dic)
 			announ_cnh_view['keyboard']['buttons'] = title
@@ -798,7 +935,7 @@ def message(request):
 		return JsonResponse(call_admin)
 	elif(strs == "예술대학"):
 		if(db_get_idx(ids) == 18):
-			db_update_idx(ids, 26)
+			db_update_idx(ids, 36)
 			dic = db_get(Announs_art , now)
 			title = announToTitle(dic)
 			announ_art_view['keyboard']['buttons'] = title
@@ -812,8 +949,8 @@ def message(request):
 			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
 			notics_value['message']['text'] = tmp
 			return JsonResponse(notics_value)
-	
-	elif(db_get_idx(ids) == 20):
+		
+	elif(db_get_idx(ids) == 21):
 		g_url = announToURL(Announs_brain,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
@@ -821,7 +958,82 @@ def message(request):
 			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
 			notics_value['message']['text'] = tmp
 			return JsonResponse(notics_value)
-	elif(db_get_idx(ids) == 21):
+	elif(db_get_idx(ids) == 22):
+		print("YEE")
+		g_url = announToURL(Announs_cse,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 23):
+		g_url = announToURL(Announs_control,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 24):
+		g_url = announToURL(Announs_mech,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 25):
+		g_url = announToURL(Announs_civil,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 26):
+		g_url = announToURL(Announs_archi,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 27):
+		g_url = announToURL(Announs_archeng,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 28):
+		g_url = announToURL(Announs_ame,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 29):
+		g_url = announToURL(Announs_ie,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 30):
+		g_url = announToURL(Announs_optical,strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+
+
+	elif(db_get_idx(ids) == 31):
 		g_url = announToURL(Announs_sabum,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
@@ -829,7 +1041,7 @@ def message(request):
 			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
 			notics_value['message']['text'] = tmp
 			return JsonResponse(notics_value)
-	elif(db_get_idx(ids) == 22):
+	elif(db_get_idx(ids) == 32):
 		g_url = announToURL(Announs_insa,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
@@ -845,7 +1057,7 @@ def message(request):
 	#		tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
 	#		notics_value['message']['text'] = tmp
 	#		return JsonResponse(notics_value)
-	elif(db_get_idx(ids) == 24):
+	elif(db_get_idx(ids) == 34):
 		g_url = announToURL(Announs_indu,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
@@ -854,7 +1066,7 @@ def message(request):
 			notics_value['message']['text'] = tmp
 			return JsonResponse(notics_value)
 
-	elif(db_get_idx(ids) == 25):
+	elif(db_get_idx(ids) == 35):
 		g_url = announToURL(Announs_cnh,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
@@ -863,7 +1075,7 @@ def message(request):
 			notics_value['message']['text'] = tmp
 			return JsonResponse(notics_value)
 
-	elif(db_get_idx(ids) == 26):
+	elif(db_get_idx(ids) == 36):
 		g_url = announToURL(Announs_art,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
