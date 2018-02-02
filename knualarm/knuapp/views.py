@@ -162,7 +162,7 @@ def give_point(_ids):
     else:
         return gives
 
-def get_kongju_Announ():
+def get_kongju_Announ(): #학생소식
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET', 'http://www.kongju.ac.kr/lounge/board.jsp?board=student_news&page=0')
@@ -175,7 +175,7 @@ def get_kongju_Announ():
 
     return json.dumps(url)
 
-def get_brain_Announ():
+def get_brain_Announ(): #공과대학
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET', 'http://brain.kongju.ac.kr/brain/cop/bbs/selectBoardList.do?bbsId=BBSMSTR_000000000001')
@@ -191,7 +191,7 @@ def get_brain_Announ():
 
     return json.dumps(url)
 
-def get_sabum_Announ():
+def get_sabum_Announ():#사범대학
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET', 'http://sabum.kongju.ac.kr/custo/list.asp?bbs_code=7')
@@ -206,7 +206,7 @@ def get_sabum_Announ():
 
     return json.dumps(url)
 
-def get_insa_Announ():
+def get_insa_Announ(): #인문사회과학대학
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET', 'https://insa.kongju.ac.kr/main/board/list.action?q=518da08fa3d7eab65226f7de6f82ae4f1be5aadc235d7f9e817ad3dea247a499')
@@ -218,7 +218,7 @@ def get_insa_Announ():
             url[cnt] = [i.text, "https://insa.kongju.ac.kr" + i['href']]
     return json.dumps(url)
 
-def get_natural_Announ():
+def get_natural_Announ(): #자연과학대학
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     url = {}
     http = urllib3.PoolManager()
@@ -231,7 +231,7 @@ def get_natural_Announ():
             url[cnt] = [i.text, i['href']]
     return url
 
-def get_indu_Announ():
+def get_indu_Announ(): #산업과학대학
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET', 'http://indu.kongju.ac.kr/board.do?paramBean.key=65&paramBean.mainGroupKey=1&boardBean.boardMngKey=1')
@@ -245,7 +245,7 @@ def get_indu_Announ():
             url[cnt] = [i.text, url_tmp]
     return json.dumps(url)
 
-def get_cnh_Announ():
+def get_cnh_Announ(): #간호보건대학
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET', 'http://cnh.kongju.ac.kr/sub03/service_01_list.asp')
@@ -257,7 +257,7 @@ def get_cnh_Announ():
             url[cnt] = [i.text, "http://cnh.kongju.ac.kr/sub03/" + i['href']]
     return json.dumps(url)
 
-def get_art_Announ():
+def get_art_Announ(): #예술대학
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET', 'http://art.kongju.ac.kr/sub03/sub01_01.jsp?menuNo=3&subNo=1')
@@ -352,7 +352,7 @@ def get_archeng_Announ(): #건축공학부
 
     return json.dumps(url)
 
-def get_ame_Announ():
+def get_ame_Announ(): #신소재공학부
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET','http://ame.kongju.ac.kr/community/notice.asp')
@@ -364,7 +364,7 @@ def get_ame_Announ():
             url[cnt] = [i.text.strip(), "http://ame.kongju.ac.kr" + i['href']]
     return json.dumps(url)
 
-def get_ie_Announ():
+def get_ie_Announ(): #산업시스템공학과
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET','http://ie.kongju.ac.kr/index.php?mid=board_lhSN77')
@@ -379,7 +379,7 @@ def get_ie_Announ():
 
     return json.dumps(url)
 
-def get_optical_Announ():
+def get_optical_Announ(): #광공학과
     url = {}
     http = urllib3.PoolManager()
     r = http.request('GET','http://optical.kongju.ac.kr/sub5_4.php')
@@ -390,6 +390,21 @@ def get_optical_Announ():
         url[cnt] = [tb[cnt].text.strip(), "http://optical.kongju.ac.kr" + tb[cnt]['href']]
 
     return json.dumps(url)
+
+
+def get_earth_Announ(): #지구과학교육과
+    url = {}
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://earth.kongju.ac.kr/modules/bbs/index.php?code=bbs_notice&xid=1')
+    sc = r.data
+    cd = BeautifulSoup(sc, "html.parser")
+    tb = cd.find("table", {'summary' : '게시판 리스트'}).find_all("a", href=True)
+    for i, cnt in zip(tb, range(len(tb))):
+        url[cnt] = [i.text.strip(), "http://earth.kongju.ac.kr/modules/bbs/" + i['href']]
+
+    return json.dumps(url)
+
+
 
 # 학식
 def get_staff_si():
