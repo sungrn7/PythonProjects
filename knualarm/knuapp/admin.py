@@ -27,7 +27,7 @@ from knuapp.models import Announ_archeng
 from knuapp.models import Announ_ame
 from knuapp.models import Announ_ie
 from knuapp.models import Announ_optical
-
+from knuapp.models import Announ_earth
 
 admin.site.register(dormi_choen)
 admin.site.register(staff_choen)
@@ -56,3 +56,4 @@ admin.site.register(Announ_archeng)
 admin.site.register(Announ_ame)
 admin.site.register(Announ_ie)
 admin.site.register(Announ_optical)
+admin.site.register(Announ_earth)

@@ -75,6 +75,10 @@ class Announ_optical(models.Model):
 	day = models.CharField(max_length=128)
 	content = models.TextField(blank=True, null=True)
 
+class Announ_earth(models.Model):
+	day = models.CharField(max_length=128)
+	content = models.TextField(blank=True, null=True)
+
 # 학식
 class dormi_choen(models.Model):
     day = models.CharField(max_length=128)

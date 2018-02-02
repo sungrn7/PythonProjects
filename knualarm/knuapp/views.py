@@ -24,7 +24,7 @@ from knuapp.models import Announ_archeng
 from knuapp.models import Announ_ame
 from knuapp.models import Announ_ie
 from knuapp.models import Announ_optical
-
+from knuapp.models import Announ_earth
 
 import json 
 import certifi
@@ -51,6 +51,7 @@ mypage = {'message': {'text': '[내정보] \n\n현재는 KNUCOIN 조회만 가�
 notics = {'message': {'text': '공주대학교 공지사항을 쉽게 볼 수 있는 서비스입니다.\n\n최근에 올라온 공지사항을 보여드리며 링크를 직접 들어가셔서 보시면 됩니다.\n많은 이용 바랍니다.\n'},'keyboard': {'type': 'buttons', 'buttons':['학생소식', '공과대학','사범대학', '인문사회과학대학', '산업과학대학', '간호보건대학', '예술대학',  '뒤로가기']}}
 notics_value = {'message': {'text': ''},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
 notics_brain = {'message': {'text': '[공과대학]\n\n공과대학의 공지사항과 공과대학에 소속되있는 학부 및 학과의 공지사항을 조회하실 수 있습니다.\n공지사항을 보시고 싶은 곳을 선택해주세요.\n'},'keyboard': {'type': 'buttons', 'buttons':['공과대학공지', '컴퓨터공학부', '제어계측공학전공', '기계자동차공학부', '건설환경공학부', '건축학부', '건축공학부', '신소재공학부', '산업시스템공학과', '광공학과', '뒤로가기']}}
+notics_sabum = {'message': {'text': '[사범대학]\n\n사범대학의 공지사항과 사범대학에 소속되있는 학부 및 학과의 공지사항을 조회하실 수 있습니다.\n공지사항을 보시고 싶은 >     곳을 선택해주세요.\n'},'keyboard': {'type': 'buttons', 'buttons':['사범대학공지', '지구과학교육과', '뒤로가기']}}
 #학식 페이지
 cheonan = {
     'message': {'text': '[공주대학교 천안캠퍼스]\n\n* 평일\n- 조식: 07:40 ~ 09:00\n- 중식: 11:30 ~ 13:30\n- 석식: 17:40 ~ 19:00\n\n* 주말 및 공휴일\n- 조식: 08:00 ~ 09:00\n- 중식: 12:00 ~ 13:00\n- 석식: 18:00 ~ 19:00\n\n어디 식당의 식단을 보시겠습니까?'},
@@ -96,7 +97,7 @@ Announs_archeng = Announ_archeng
 Announs_ame = Announ_ame
 Announs_ie = Announ_ie
 Announs_optical = Announ_optical
-
+Announs_earth = Announ_earth
 
 def db_get(self, days):
     try:
@@ -522,6 +523,7 @@ def keyboard(request):
 	Announ_ame_ck = db_check(Announs_ame, now)
 	Announ_ie_ck = db_check(Announs_ie, now)
 	Announ_optical_ck = db_check(Announs_optical, now)
+	Announ_earth_ck = db_check(Announs_earth, now)
     #if (dreem_ck == "X"):
     #    dreem_con = get_dreem()
 	
@@ -577,7 +579,9 @@ def keyboard(request):
 	if (Announ_optical_ck == "X"):
 		Announ_optical_con = get_optical_Announ()
 		db_insert(Announs_optical, Announ_optical_con)
-	
+	if (Announ_earth_ck == "X"):
+		Announ_earth_con = get_earth_Announ()
+		db_insert(Announs_earth, Announ_earth_con)
 
 	if (staff_ye_ck == "X"):
 		staff_ye_con  = get_staff_ye()
@@ -625,6 +629,7 @@ def message(request):
 	announ_ame_view = {'message': {'text': '[신소재공학부]\n\n을 선택하셨습니다.\n신소재공학부에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
 	announ_ie_view = {'message': {'text': '[산업시스템공학과]\n\n을 선택하셨습니다.\n산업시스템공학과에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
 	announ_optical_view = {'message': {'text': '[광공학과]\n\n을 선택하셨습니다.\n광공학과에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',         'buttons':[]}}
+	announ_earth_view = {'message': {'text': '[지구과학교육과]\n\n을 선택하셨습니다.\n지구과학교육과에 올라온 공지사항을 보여드리겠습니다.'},'keyboard': {'type': 'buttons',              'buttons':[]}}
 
 	knucoin_de = {'message': {'text': '[KNUCOIN]\n\n현재 소지하고 있는 갯수는 아래와 같습니다.\n\nKNUCOIN : '},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
 	knucoin_gi = {'message': {'text': '[KNUCOIN]\n\n코인은 하루에 0.1knc를 지급합니다.\n\n'},'keyboard': {'type': 'buttons', 'buttons':['메인', '뒤로가기']}}
@@ -736,18 +741,23 @@ def message(request):
 			db_update_idx(ids, 18)
 			return JsonResponse(notics)
 		if(db_get_idx(ids) == 32):
-			db_update_idx(ids, 18)
-			return JsonResponse(notics)
+			db_update_idx(ids, 31)
+			return JsonResponse(notics_sabum)
 		if(db_get_idx(ids) == 33):
-			db_update_idx(ids, 18)
-			return JsonResponse(notics)
+			db_update_idx(ids, 31)
+			return JsonResponse(notics_sabum)
 		if(db_get_idx(ids) == 34):
+			db_update_idx(ids, 20)
+			return JsonResponse(notics)
+		if(db_get_idx(ids) == 36):
 			db_update_idx(ids, 18)
 			return JsonResponse(notics)
-		if(db_get_idx(ids) == 35):
+		if(db_get_idx(ids) == 37):
 			db_update_idx(ids, 18)
 			return JsonResponse(notics)
-
+		if(db_get_idx(ids) == 38):
+			db_update_idx(ids, 18)
+			return JsonResponse(notics)
 
 
 	elif(strs == "메인"):
@@ -910,10 +920,21 @@ def message(request):
 	elif(strs == "사범대학"):
 		if(db_get_idx(ids) == 18):
 			db_update_idx(ids,31)
+			return JsonResponse(notics_sabum)
+	elif(db_get_idx(ids) == 31):
+		if(strs == "사범대학공지"):
+			db_update_idx(ids,32)
 			dic = db_get(Announs_sabum , now)
 			title = announToTitle(dic)
 			announ_sabum_view['keyboard']['buttons'] = title
 			return JsonResponse(announ_sabum_view)
+		if(strs == "지구과학교육과"):
+			db_update_idx(ids,33)
+			dic = db_get(Announs_earth, now)
+			title = announToTitle(dic)
+			announ_earth_view['keyboard']['buttons'] = title
+			return JsonResponse(announ_earth_view)
+			
 		return JsonResponse(call_admin)
 	elif(strs == "인문사회과학대학"):
 		if(db_get_idx(ids) == 18):
@@ -1048,7 +1069,7 @@ def message(request):
 			return JsonResponse(notics_value)
 
 
-	elif(db_get_idx(ids) == 31):
+	elif(db_get_idx(ids) == 32):
 		g_url = announToURL(Announs_sabum,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
@@ -1056,7 +1077,15 @@ def message(request):
 			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
 			notics_value['message']['text'] = tmp
 			return JsonResponse(notics_value)
-	elif(db_get_idx(ids) == 32):
+	elif(db_get_idx(ids) == 33):
+		g_url = announToURL(Announs_earth, strs)
+		if(g_url == "X"):
+			return JsonResponse(call_admin)
+		else:
+			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url
+			notics_value['message']['text'] = tmp
+			return JsonResponse(notics_value)
+	elif(db_get_idx(ids) == 34):
 		g_url = announToURL(Announs_insa,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
@@ -1064,7 +1093,7 @@ def message(request):
 			tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
 			notics_value['message']['text'] = tmp
 			return JsonResponse(notics_value)
-	#elif(db_get_idx(ids) == 23):
+	#elif(db_get_idx(ids) == 35):
 	#	g_url = announToURL(Announs_natural,strs)
 	#	if(g_url == "X"):
 	#		return JsonResponse(call_admin)
@@ -1072,7 +1101,7 @@ def message(request):
 	#		tmp = "[" + strs + "]\n공지사항의 링크는 아래에 적혀있습니다.\nurl : " + g_url 
 	#		notics_value['message']['text'] = tmp
 	#		return JsonResponse(notics_value)
-	elif(db_get_idx(ids) == 34):
+	elif(db_get_idx(ids) == 36):
 		g_url = announToURL(Announs_indu,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
@@ -1081,7 +1110,7 @@ def message(request):
 			notics_value['message']['text'] = tmp
 			return JsonResponse(notics_value)
 
-	elif(db_get_idx(ids) == 35):
+	elif(db_get_idx(ids) == 37):
 		g_url = announToURL(Announs_cnh,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
@@ -1090,7 +1119,7 @@ def message(request):
 			notics_value['message']['text'] = tmp
 			return JsonResponse(notics_value)
 
-	elif(db_get_idx(ids) == 36):
+	elif(db_get_idx(ids) == 38):
 		g_url = announToURL(Announs_art,strs)
 		if(g_url == "X"):
 			return JsonResponse(call_admin)
